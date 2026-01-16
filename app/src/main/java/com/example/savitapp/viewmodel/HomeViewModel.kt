@@ -6,34 +6,35 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.savitapp.model.Stuff
-import com.example.savitapp.repository.StuffRepository
+import com.example.savitapp.repository.StuffRepository // <-- PENTING: IMPORT INI
 import kotlinx.coroutines.launch
 import java.io.IOException
 
-// State untuk UI Home
 sealed interface HomeUiState {
-    object Loading : HomeUiState
     data class Success(val stuffList: List<Stuff>) : HomeUiState
     data class Error(val message: String) : HomeUiState
+    object Loading : HomeUiState
 }
 
 class HomeViewModel(private val repository: StuffRepository) : ViewModel() {
     var homeUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
-    // Fungsi untuk mengambil data barang berdasarkan User ID
     fun getStuffList(userId: Int) {
         viewModelScope.launch {
             homeUiState = HomeUiState.Loading
             try {
+                // UPDATE: Pakai response.body() karena sekarang return Response<>
                 val response = repository.getAllStuff(userId)
                 if (response.isSuccessful) {
                     homeUiState = HomeUiState.Success(response.body() ?: emptyList())
                 } else {
-                    homeUiState = HomeUiState.Error("Gagal memuat data")
+                    homeUiState = HomeUiState.Error("Gagal: ${response.message()}")
                 }
             } catch (e: IOException) {
-                homeUiState = HomeUiState.Error("Koneksi Error: ${e.message}")
+                homeUiState = HomeUiState.Error("Koneksi Error")
+            } catch (e: Exception) {
+                homeUiState = HomeUiState.Error("Error: ${e.message}")
             }
         }
     }
