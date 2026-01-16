@@ -5,47 +5,58 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.savitapp.model.EntryUiState
+import com.example.savitapp.model.InsertUiEvent
+import com.example.savitapp.model.Stuff // <--- Pastikan ini ada
+import com.example.savitapp.model.toStuff
+import com.example.savitapp.model.toUiStateEntry // <--- WAJIB IMPORT INI
 import com.example.savitapp.repository.StuffRepository
 import kotlinx.coroutines.launch
 
 class EditViewModel(private val repository: StuffRepository) : ViewModel() {
-    var uiState: EntryUiState by mutableStateOf(EntryUiState())
+    var uiState by mutableStateOf(EntryUiState())
         private set
 
-    // Load data awal untuk diedit
+    fun updateUiState(event: InsertUiEvent) {
+        uiState = EntryUiState(insertUiEvent = event, isEntryValid = validateInput(event))
+    }
+
+    private fun validateInput(event: InsertUiEvent = uiState.insertUiEvent): Boolean {
+        return event.namaBarang.isNotBlank() && event.hargaBarang.isNotBlank() && event.rencanaHari.isNotBlank()
+    }
+
     fun loadStuffData(userId: Int, stuffId: Int) {
         viewModelScope.launch {
             try {
+                // TRIK: Panggil getAllStuff (Jalur Dashboard yang Aman)
                 val response = repository.getAllStuff(userId)
-                val stuff = response.body()?.find { it.stuffId == stuffId }
-                if (stuff != null) {
-                    uiState = EntryUiState(
-                        insertUiEvent = InsertUiEvent(
-                            namaBarang = stuff.namaBarang,
-                            hargaBarang = stuff.hargaBarang.toString(),
-                            rencanaHari = stuff.rencanaHari.toString(),
-                            prioritas = stuff.prioritas
-                        ),
-                        isEntryValid = true
-                    )
-                }
-            } catch (e: Exception) { e.printStackTrace() }
-        }
-    }
 
-    fun updateUiState(event: InsertUiEvent) {
-        uiState = EntryUiState(insertUiEvent = event, isEntryValid = true) // Validasi simpel
+                if (response.isSuccessful) {
+                    val allStuff = response.body()
+                    // Cari barang yang ID-nya sama
+                    val targetStuff = allStuff?.find { it.stuffId == stuffId }
+
+                    if (targetStuff != null) {
+                        // Masukkan ke Form
+                        uiState = targetStuff.toUiStateEntry()
+                    }
+                }
+            } catch (e: Exception) {
+                // Handle error
+            }
+        }
     }
 
     fun updateStuff(userId: Int, stuffId: Int, onSuccess: () -> Unit) {
         viewModelScope.launch {
-            try {
-                val stuff = uiState.insertUiEvent.toStuff(userId)
-                val response = repository.updateStuff(stuffId, stuff)
-                if (response.isSuccessful) {
-                    onSuccess()
-                }
-            } catch (e: Exception) { e.printStackTrace() }
+            if (validateInput()) {
+                val stuff = uiState.insertUiEvent.toStuff()
+                val stuffToUpdate = stuff.copy(stuffId = stuffId, userId = userId)
+                try {
+                    val response = repository.updateStuff(stuffId, stuffToUpdate)
+                    if (response.isSuccessful) { onSuccess() }
+                } catch (e: Exception) { }
+            }
         }
     }
 }
