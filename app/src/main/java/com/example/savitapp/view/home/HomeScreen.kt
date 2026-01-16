@@ -33,6 +33,7 @@ fun HomeScreen(
     userId: Int,
     onNavigateToAdd: () -> Unit,
     onDetailClick: (Int) -> Unit,
+    onNavigateToProfile: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = PenyediaViewModel.Factory)
 ) {
     // 1. Color Palette Sesuai Request
@@ -58,29 +59,30 @@ fun HomeScreen(
 
     Scaffold(
         topBar = {
-            // 2. TopAppBar Hijau Muda
             TopAppBar(
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        // Icon Profil Hitam
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        // 2. TAMBAHKAN CLICKABLE DI SINI AGAR BISA DIKLIK
+                        modifier = Modifier.clickable { onNavigateToProfile() }
+                    ) {
                         Icon(
                             imageVector = Icons.Default.Person,
                             contentDescription = "Profile",
-                            tint = Hitam,
+                            tint = Color(0xFF000000), // Hitam
                             modifier = Modifier.size(28.dp)
                         )
                         Spacer(modifier = Modifier.width(12.dp))
-                        // Tulisan Halo, [Nama User] Hitam
                         Text(
                             text = "Halo, $namaUser",
-                            color = Hitam,
+                            color = Color(0xFF000000), // Hitam
                             fontWeight = FontWeight.Bold,
                             fontSize = 20.sp
                         )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = HijauMuda
+                    containerColor = Color(0xFFA2B29F) // Hijau Muda
                 )
             )
         },
