@@ -1,5 +1,6 @@
 package com.example.savitapp.view.auth
 
+import android.content.Context
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -48,10 +49,17 @@ fun RegisterScreen(
 
     LaunchedEffect(uiState) {
         if (uiState is AuthUiState.Success) {
+            // --- KODE TAMBAHAN MULAI ---
+            val sharedPreferences =
+                context.getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+            with(sharedPreferences.edit()) {
+                putString("NAMA_USER", nama) // Simpan nama yang diketik di input box
+                apply()
+            }
+            // --- KODE TAMBAHAN SELESAI ---
+
             Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
             onNavigateBack()
-        } else if (uiState is AuthUiState.Error) {
-            Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
         }
     }
 
