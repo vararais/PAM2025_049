@@ -33,7 +33,7 @@ fun EditStuffScreen(
     val coroutineScope = rememberCoroutineScope()
     val scrollState = rememberScrollState()
 
-    // 1. Color Palette
+    // 1. Color Palette (Konsisten)
     val HijauMuda = Color(0xFFA2B29F)
     val HijauTua = Color(0xFF798777)
     val Cream = Color(0xFFF8EDE3)
@@ -41,19 +41,21 @@ fun EditStuffScreen(
     val Putih = Color(0xFFFFFFFF)
     val Merah = Color(0xFFFF0000)
 
-    // Load data barang saat halaman dibuka
+    // Load data barang saat halaman dibuka agar form terisi data lama
     LaunchedEffect(Unit) {
         viewModel.loadStuffData(userId, stuffId)
     }
 
     Scaffold(
         topBar = {
+            // 2. TopAppBar Hijau Muda, Tulisan "Edit barang" Hitam Bold
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "Edit Barang",
+                        "Edit barang",
                         fontWeight = FontWeight.Bold,
-                        color = Hitam
+                        color = Hitam,
+                        fontSize = 22.sp
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
@@ -70,7 +72,8 @@ fun EditStuffScreen(
                 .verticalScroll(scrollState),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Panggil FormInput (Pastikan di EntryStuffScreen 'fun FormInput' bersifat public)
+            // 3. Panggil FormInput (Style sama persis dengan halaman Tambah)
+            // Pastikan fungsi 'FormInput' di EntryStuffScreen.kt sudah PUBLIC (tidak private)
             FormInput(
                 insertUiEvent = viewModel.uiState.insertUiEvent,
                 onValueChange = viewModel::updateUiState,
@@ -88,7 +91,7 @@ fun EditStuffScreen(
 
             Spacer(modifier = Modifier.height(10.dp))
 
-            // Button Update (Hijau Tua)
+            // 4. Button "Update barang" (Hijau Tua, Teks Putih)
             Button(
                 onClick = {
                     coroutineScope.launch {
@@ -100,25 +103,31 @@ fun EditStuffScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = RoundedCornerShape(50),
+                shape = RoundedCornerShape(50), // Rounded Edge
                 colors = ButtonDefaults.buttonColors(containerColor = HijauTua)
             ) {
-                Text("Update Data", fontSize = 18.sp, fontWeight = FontWeight.Bold, color = Putih)
+                Text(
+                    text = "Update barang",
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Putih
+                )
             }
 
-            // Button Batal (Hijau Muda, Outline Merah)
+            // 5. Button "Kembali" (Hijau Muda, Teks Merah Outline Putih)
             Button(
                 onClick = navigateBack,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
-                shape = RoundedCornerShape(50),
+                shape = RoundedCornerShape(50), // Rounded Edge
                 colors = ButtonDefaults.buttonColors(containerColor = HijauMuda)
             ) {
                 // Trik Outline Text
                 Box(contentAlignment = Alignment.Center) {
+                    // Layer 1: Stroke Putih
                     Text(
-                        text = "Batal",
+                        text = "Kembali",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         style = TextStyle.Default.copy(
@@ -130,8 +139,9 @@ fun EditStuffScreen(
                         ),
                         color = Putih
                     )
+                    // Layer 2: Fill Merah
                     Text(
-                        text = "Batal",
+                        text = "Kembali",
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold,
                         color = Merah
