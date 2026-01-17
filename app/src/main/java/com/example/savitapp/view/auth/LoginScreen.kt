@@ -1,9 +1,8 @@
 package com.example.savitapp.view.auth
 
+import android.content.Context // Penting buat SharedPreferences
 import android.widget.Toast
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -49,6 +48,17 @@ fun LoginScreen(
     LaunchedEffect(uiState) {
         when (uiState) {
             is AuthUiState.Success -> {
+                // --- LOGIC PENYIMPANAN DATA USER (FIX) ---
+                val sharedPreferences = context.getSharedPreferences("UserSession", Context.MODE_PRIVATE)
+                with(sharedPreferences.edit()) {
+                    // Simpan Nama User dari API (timpa data lama)
+                    putString("NAMA_USER", uiState.nama ?: "User")
+                    // Simpan ID User
+                    putInt("USER_ID", uiState.userId ?: 0)
+                    apply()
+                }
+                // -----------------------------------------
+
                 Toast.makeText(context, uiState.message, Toast.LENGTH_SHORT).show()
                 onLoginSuccess(uiState.userId ?: 0)
                 viewModel.resetState()
@@ -65,7 +75,7 @@ fun LoginScreen(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        // Background Image (Pastikan ada res/drawable/stars)
+        // Background Image
         Image(
             painter = painterResource(id = R.drawable.hijaubekron),
             contentDescription = "Background Stars",
@@ -78,13 +88,13 @@ fun LoginScreen(
             modifier = Modifier.fillMaxSize(),
             contentAlignment = Alignment.Center
         ) {
-            // 4. Card untuk kotak di tengah (Hijau Tua)
+            // 4. Card Login
             Card(
                 modifier = Modifier
                     .padding(24.dp)
                     .fillMaxWidth(),
                 shape = RoundedCornerShape(20.dp),
-                colors = CardDefaults.cardColors(containerColor = HijauTua), // Warna Hijau Tua
+                colors = CardDefaults.cardColors(containerColor = HijauTua),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 Column(
@@ -92,7 +102,7 @@ fun LoginScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.spacedBy(16.dp)
                 ) {
-                    // Judul Login Here (Putih)
+                    // Judul Login Here
                     Text(
                         text = "Login Here",
                         fontSize = 32.sp,
@@ -102,12 +112,12 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Input Email (Rounded, Cream)
+                    // Input Email
                     OutlinedTextField(
                         value = email,
                         onValueChange = { email = it },
                         label = { Text("Email") },
-                        shape = RoundedCornerShape(50), // Rounded Edge penuh
+                        shape = RoundedCornerShape(50),
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedContainerColor = Cream,
                             unfocusedContainerColor = Cream,
@@ -120,7 +130,7 @@ fun LoginScreen(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email)
                     )
 
-                    // Input Password (Rounded, Cream)
+                    // Input Password
                     OutlinedTextField(
                         value = password,
                         onValueChange = { password = it },
@@ -141,7 +151,7 @@ fun LoginScreen(
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Tombol Login (Hijau Muda, Teks Hitam)
+                    // Tombol Login
                     Button(
                         onClick = { viewModel.login(email, password) },
                         modifier = Modifier
@@ -156,13 +166,13 @@ fun LoginScreen(
                             Text(
                                 text = "Login",
                                 color = HitamTeks,
-                                fontSize = 18.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
                     }
 
-                    // Tombol Register Link (Cream, Teks Hitam)
+                    // Tombol Register Link
                     Button(
                         onClick = { onNavigateToRegister() },
                         colors = ButtonDefaults.buttonColors(containerColor = Cream),
@@ -174,7 +184,7 @@ fun LoginScreen(
                             color = HitamTeks,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            fontSize = 12.sp
+                            fontSize = 15.sp
                         )
                     }
                 }
