@@ -40,7 +40,7 @@ fun HistoryScreen(
     val Cream = Color(0xFFF8EDE3)
     val Hitam = Color(0xFF000000)
     val Putih = Color(0xFFFFFFFF)
-    val Merah = Color(0xFFFF0000)
+    val Merah = Color(0xFFA00000)
 
     // Load data history saat halaman dibuka
     LaunchedEffect(userId) {
@@ -72,15 +72,15 @@ fun HistoryScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp)
-                    .height(50.dp),
-                shape = RoundedCornerShape(50),
+                    .height(60.dp),
+                shape = RoundedCornerShape(40),
                 colors = ButtonDefaults.buttonColors(containerColor = HijauMuda)
             ) {
                 // Trik Outline Text
                 Box(contentAlignment = Alignment.Center) {
                     Text(
                         text = "Kembali",
-                        fontSize = 18.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         style = TextStyle.Default.copy(
                             drawStyle = Stroke(
@@ -93,7 +93,7 @@ fun HistoryScreen(
                     )
                     Text(
                         text = "Kembali",
-                        fontSize = 18.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Merah
                     )
@@ -172,7 +172,7 @@ fun HistoryCard(history: History) {
             Surface(
                 shape = CircleShape,
                 color = Putih,
-                modifier = Modifier.size(48.dp)
+                modifier = Modifier.size(75.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.CheckCircle,
@@ -193,7 +193,7 @@ fun HistoryCard(history: History) {
                     text = history.namaBarang ?: "Barang", // Handle null safety
                     fontWeight = FontWeight.Bold,
                     fontSize = 18.sp,
-                    color = Hitam
+                    color = Putih
                 )
 
                 Spacer(modifier = Modifier.height(4.dp))
@@ -203,7 +203,7 @@ fun HistoryCard(history: History) {
                     text = "Rp ${history.nominal}",
                     fontWeight = FontWeight.Bold,
                     fontSize = 16.sp,
-                    color = Hitam
+                    color = Putih
                 )
 
                 // Tanggal
