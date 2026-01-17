@@ -173,7 +173,7 @@ fun RegisterScreen(
                             Text(
                                 text = "Register",
                                 color = HitamTeks,
-                                fontSize = 18.sp,
+                                fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold
                             )
                         }
@@ -191,7 +191,7 @@ fun RegisterScreen(
                             color = HitamTeks,
                             fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center,
-                            fontSize = 12.sp
+                            fontSize = 15.sp
                         )
                     }
                 }
