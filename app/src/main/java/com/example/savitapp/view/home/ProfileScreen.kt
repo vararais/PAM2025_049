@@ -39,7 +39,7 @@ fun ProfileScreen(
     val Cream = Color(0xFFF8EDE3)
     val Hitam = Color(0xFF000000)
     val Putih = Color(0xFFFFFFFF)
-    val Merah = Color(0xFFFF0000)
+    val Merah = Color(0xFFA00000)
 
     // State untuk Pop-up Dialog Logout
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -96,7 +96,7 @@ fun ProfileScreen(
                 contentDescription = "Profile Picture",
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
-                    .size(150.dp) // Ukuran besar
+                    .size(250.dp) // Ukuran besar
                     .clip(CircleShape) // Bentuk Lingkaran
                     .border(4.dp, HijauTua, CircleShape) // Border Hijau Tua biar rapi
             )
@@ -106,7 +106,7 @@ fun ProfileScreen(
             // Nama User di bawah foto
             Text(
                 text = namaUser,
-                fontSize = 24.sp,
+                fontSize = 35.sp,
                 fontWeight = FontWeight.Bold,
                 color = Hitam
             )
@@ -118,8 +118,8 @@ fun ProfileScreen(
                 onClick = onNavigateToHistory,
                 modifier = Modifier
                     .fillMaxWidth(0.8f) // Lebar 80%
-                    .height(55.dp),
-                shape = RoundedCornerShape(50),
+                    .height(70.dp),
+                shape = RoundedCornerShape(20),
                 colors = ButtonDefaults.buttonColors(containerColor = HijauMuda)
             ) {
                 Icon(
@@ -132,7 +132,7 @@ fun ProfileScreen(
                 Text(
                     text = "Lihat Riwayat",
                     color = Hitam,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
@@ -144,15 +144,15 @@ fun ProfileScreen(
                 onClick = onNavigateBack,
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .height(55.dp),
-                shape = RoundedCornerShape(50),
+                    .height(70.dp),
+                shape = RoundedCornerShape(20),
                 colors = ButtonDefaults.buttonColors(containerColor = HijauTua)
             ) {
                 // Trik Outline Text
                 Box(contentAlignment = Alignment.Center) {
                     Text(
                         text = "Kembali",
-                        fontSize = 18.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         style = TextStyle.Default.copy(
                             drawStyle = Stroke(
@@ -165,7 +165,7 @@ fun ProfileScreen(
                     )
                     Text(
                         text = "Kembali",
-                        fontSize = 18.sp,
+                        fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
                         color = Merah
                     )
@@ -179,15 +179,15 @@ fun ProfileScreen(
                 onClick = { showLogoutDialog = true }, // Munculkan Dialog
                 modifier = Modifier
                     .fillMaxWidth(0.8f)
-                    .height(55.dp),
-                shape = RoundedCornerShape(50),
+                    .height(70.dp),
+                shape = RoundedCornerShape(20),
                 border = BorderStroke(2.dp, Merah), // Outline Merah
                 colors = ButtonDefaults.outlinedButtonColors(containerColor = Putih)
             ) {
                 Text(
                     text = "Log Out",
                     color = Merah,
-                    fontSize = 18.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
             }
